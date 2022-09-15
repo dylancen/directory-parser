@@ -6,7 +6,7 @@ import java.util.regex.Pattern;
 
 public class Main {
     public static void main(String[] args){
-        directoryParser parser = new directoryParser("C:\\Users\\dylan\\Documents\\test_folder");
+        directoryParser parser = new directoryParser(args[0]);
         for(File f : parser.getOrderedFiles()){
             System.out.println(f.getAbsolutePath());
         }

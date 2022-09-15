@@ -1,7 +1,4 @@
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileWriter;
-import java.io.PrintWriter;
+import java.io.*;
 import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -10,7 +7,7 @@ public class directoryParser {
     private List<File> order;
     private String originPath;
 
-    private static final Pattern p = Pattern.compile("(require ')(.*)(')");
+    private static final Pattern p = Pattern.compile("(require ‘)(.*)(‘)");
 
     private void parseAndOrderAllFiles(String path){
         File originDir = new File(path);
@@ -52,8 +49,8 @@ public class directoryParser {
 
     private void concatFileContents(){
         File newFile = new File("output_file.txt");
-        List<File> ordered = new ArrayList<>();
-        ordered.addAll(this.order);
+        List<File> orderedFiles = new ArrayList<>();
+        orderedFiles.addAll(this.order);
         try{
             if(!newFile.createNewFile()){
                 PrintWriter clearer = new PrintWriter(newFile);
@@ -62,11 +59,39 @@ public class directoryParser {
             }
 
             FileWriter writer = new FileWriter(newFile);
-            Scanner reader;
-
+            String buffer = "";
+            while(!orderedFiles.isEmpty()){
+                File f = orderedFiles.remove(orderedFiles.size()-1);
+                buffer = updateBuffer(f, orderedFiles) + buffer;
+            }
+            writer.write(buffer);
+            writer.close();
         }catch (Exception e){
             System.out.println("Error occured");
             e.printStackTrace();
+        }
+    }
+
+    private String updateBuffer(File f, List<File> orderedFiles){
+        Scanner reader;
+        try {
+            reader = new Scanner(f);
+            orderedFiles.remove(f);
+            String localBuffer = "";
+            while(reader.hasNextLine()){
+                String line = reader.nextLine();
+                String required = reqRegex(line);
+                if (required != null){
+                    File depFile = new File(this.originPath + "\\" + required + ".txt");
+                    localBuffer = localBuffer + updateBuffer(depFile, orderedFiles);
+                }else {
+                    localBuffer = localBuffer + line + "\n";
+                }
+            }
+            reader.close();
+            return localBuffer;
+        } catch (FileNotFoundException e) {
+            throw new RuntimeException(e);
         }
     }
 
@@ -83,7 +108,7 @@ public class directoryParser {
         this.order = new ArrayList<>();
 
         parseAndOrderAllFiles(this.originPath);
-        //concatFileContents();
+        concatFileContents();
     }
 
     public List<File> getOrderedFiles(){
