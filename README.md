@@ -1,20 +1,20 @@
 ﻿# directory-parser
-Ссылка на задание: https://doczilla-hr.notion.site/4dc4a09b1d6944d78a7f7d77317cbb63
+Link to challenge: https://doczilla-hr.notion.site/4dc4a09b1d6944d78a7f7d77317cbb63
 
-Решение разбито на 2 этапа:
-- считывание структуры файлов и сортирвка относительно зависимостей (и имени)
-- конкатенцаия фалов в единый
+The solution is divided into 2 parts:
+- reading the structure of the filesystem and sorting them based on their dependencies (and name)
+- concatentaion of the files (based on their dependencies) into a single file
 
-Решение выполнено в классе **directoryParser**
+The solution is completed in the **directoryParser** class
 
-За считывание и сортировку отвечает функция **parseAndOrderAllFiles()**, которая считывает и параллельно сортирует используя рекурсивную функцию **addToOrder**
+The function for reading and sorting is **parseAndOrderAllFiles()**, that reads and sorts in parallel using the recursive function **addToOrder**
 
-После считывания, происходит конкатенация файлов используя функцию **concatFileContents()**, которая также использует рекурсивную функцию для считывания всех зависимостей **getCombinedText(..)**
+After reading the files are concatenated using **concatFileContents()**, that also uses a recursive function that reads all dependencies **getCombinedText(..)**
 
-Программа выводит список корректно отсортированной структуры файлов а также создает файл в корневой папке проекта под названием **output_file.txt** в которой сделана конкатенация файлов
+The program outputs the correctly sorted file structure list and also creates a file in the root folder with the name **output_file.txt** in which all the file contents are concatenated.
 
-Запустить программу можно используя команду:
+You can launch the program using the following command:
 
-`java -classpath ".\out\production\combineFiles\" Main *абсолютный путь к папке*`
+`java -classpath ".\out\production\combineFiles\" Main *absolute file path*`
 
-убедитесь что вы находитесь в коревой папке репозитория проекта и что у вас имеется java версии 18
+Make sure that you are in the root folder of the project repository and that you have java 18 installed
